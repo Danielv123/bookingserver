@@ -1,7 +1,145 @@
+<!DOCTYPE html>
+<html>
 <head>
-    <script src="/booking.js"></script>
-</head>
+<style>
+table#t01{
+	width: 100%;
+	color: white;
+	border: 1px solid gray;
+	border-collapse: collapse;
+}
+table#t01 th, tr{
+	padding: 7px;
+	width: 50%;
+	text-align: middle;
+	background-color: green;
+}
 
-<body>
-    <h1>Bookingsystem Assiden</h1>
+</style>
+<title>Åssiden Booking System</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="margin:0px;">
+
+<script>
+function statusChangeFunction(){
+	if (document.getElementById("table7301").innerHTML == "07:30") {
+		if (document.getElementById("table7302").innerHTML == "Ledig") {
+			if (!document.getElementById("Username").innerHTML == ""){
+				document.getElementById("table7301").style.backgroundColor = "#eeee17";
+				document.getElementById("table7302").style.backgroundColor = "#eeee17";
+				document.getElementById("table7302").innerHTML = "Booket av " + document.getElementById("Username").innerHTML
+			}
+		}
+		else if (document.getElementById("table7302").innerHTML == "Booket") {
+			document.getElementById("table7301").style.backgroundColor = "crimson";
+			document.getElementById("table7302").style.backgroundColor = "crimson";
+			document.getElementById("table7302").innerHTML = "Opptatt"
+		}
+		else if (document.getElementById("table7302").innerHTML == "Opptatt") {
+			document.getElementById("table7301").style.backgroundColor = "green";
+			document.getElementById("table7302").style.backgroundColor = "green";
+			document.getElementById("table7302").innerHTML = "Ledig"
+		}
+	}
+}
+function loginFunction(){
+	if (document.getElementById("LoginCode").value == "TestKode1"){
+		document.getElementById("Username").innerHTML = "Anders";
+		document.getElementById("LoginButton").style.display = "none";
+		document.getElementById("LoginCode").style.display = "none";
+	}
+}
+</script>
+
+<h1 style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom Anode 136<B></h1>
+
+
+<input type="text" name="LoginCode" id="LoginCode" value="TestKode1">
+<button onclick="loginFunction()" id="LoginButton">Login</button>
+<p id="Username"></p>
+
+<div style="background-color:white;color:white;">.</div>
+<table id="t01">
+	<tr>
+		<th style="background-color: gray;">Tid</th>
+		<th style="background-color: gray;">Status  </th>
+	</tr>
+	<tr>
+		<th id="table7301" onclick="statusChangeFunction()">07:30</th>
+		<th id="table7302" onclick="statusChangeFunction()">Ledig</th>
+	</tr>
+	<tr>
+		<th>08:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>08:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>09:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>09:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>10:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>10:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>11:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>11:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>12:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>12:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>13:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>13:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>14:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>14:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>15:00</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>15:30</th>
+		<th>Ledig</th>
+	</tr>
+	<tr>
+		<th>16:00</th>
+		<th>Ledig</th>
+	</tr>
+</table>
+
+
 </body>
+</html>
