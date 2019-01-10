@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="moment.min.js">
+<script language="JavaScript" type="text/javascript" src="moment.min.js">
 </script>
-<script src="jquery-3.3.1.min.js">
+<script language="JavaScript" type="text/javascript" src="jquery-3.3.1.min.js">
 </script>
 <style>
 table#t01{
@@ -116,10 +116,10 @@ table#t01 th, tr{
 </table>
 
 <script>
-let timeSlots = document.querySelectorAll(".timeSlot");
-timeSlots.forEach(timeslot => {
-	timeslot.onclick = statusChangeFunction;
-});
+var timeSlots = document.querySelectorAll(".timeSlot");
+for(var i = 0; i < timeSlots.length; i++){
+	timeSlots[i].onclick = statusChangeFunction;
+}
 function statusChangeFunction(){
 	if (!document.getElementById("Username").innerHTML == ""){
 	var settings = {
@@ -134,7 +134,7 @@ function statusChangeFunction(){
 			room: "RAM",
 			from: "Thu Jan 03 2019 14:36:03 GMT+0100 (Central European Standard Time)",
 			to: "Thu Jan 03 2019 15:36:03 GMT+0100 (Central European Standard Time)"
-		}),
+		})
 };
 $.ajax(settings).done(function (response) {
   console.log(response);
