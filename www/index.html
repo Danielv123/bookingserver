@@ -22,36 +22,7 @@ table#t01 th, tr{
 </head>
 <body style="margin:0px;">
 
-<script>
-function statusChangeFunction(){
-	if (document.getElementById("table7301").innerHTML == "07:30") {
-		if (document.getElementById("table7302").innerHTML == "Ledig") {
-			if (!document.getElementById("Username").innerHTML == ""){
-				document.getElementById("table7301").style.backgroundColor = "#eeee17";
-				document.getElementById("table7302").style.backgroundColor = "#eeee17";
-				document.getElementById("table7302").innerHTML = "Booket av " + document.getElementById("Username").innerHTML
-			}
-		}
-		else if (document.getElementById("table7302").innerHTML == "Booket") {
-			document.getElementById("table7301").style.backgroundColor = "crimson";
-			document.getElementById("table7302").style.backgroundColor = "crimson";
-			document.getElementById("table7302").innerHTML = "Opptatt"
-		}
-		else if (document.getElementById("table7302").innerHTML == "Opptatt") {
-			document.getElementById("table7301").style.backgroundColor = "green";
-			document.getElementById("table7302").style.backgroundColor = "green";
-			document.getElementById("table7302").innerHTML = "Ledig"
-		}
-	}
-}
-function loginFunction(){
-	if (document.getElementById("LoginCode").value == "TestKode1"){
-		document.getElementById("Username").innerHTML = "Anders";
-		document.getElementById("LoginButton").style.display = "none";
-		document.getElementById("LoginCode").style.display = "none";
-	}
-}
-</script>
+
 
 <h1 style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom Anode 136<B></h1>
 
@@ -66,80 +37,112 @@ function loginFunction(){
 		<th style="background-color: gray;">Tid</th>
 		<th style="background-color: gray;">Status  </th>
 	</tr>
-	<tr>
-		<th id="table7301" onclick="statusChangeFunction()">07:30</th>
-		<th id="table7302" onclick="statusChangeFunction()">Ledig</th>
+	<tr class="timeSlot">
+		<th id="table7301">07:30</th>
+		<th id="table7302">Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>08:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>08:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>09:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>09:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>10:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>10:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>11:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>11:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>12:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>12:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>13:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>13:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>14:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>14:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>15:00</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>15:30</th>
 		<th>Ledig</th>
 	</tr>
-	<tr>
+	<tr class="timeSlot">
 		<th>16:00</th>
 		<th>Ledig</th>
 	</tr>
 </table>
 
-
+<script>
+let timeSlots = document.querySelectorAll(".timeSlot");
+timeSlots.forEach(timeslot => {
+	timeslot.onclick = statusChangeFunction;
+});
+function statusChangeFunction(){
+	if (!document.getElementById("Username").innerHTML == ""){
+		if (this.childNodes[3].innerHTML == "Ledig") {
+			this.childNodes[1].style.backgroundColor = "#eeee17";
+			this.childNodes[3].style.backgroundColor = "#eeee17";
+			this.childNodes[3].innerHTML = "Booket av " + document.getElementById("Username").innerHTML
+		}
+		else if (this.childNodes[3].innerHTML == "Booket") {
+			this.childNodes[3].style.backgroundColor = "crimson";
+			this.childNodes[3].style.backgroundColor = "crimson";
+			this.childNodes[3].innerHTML = "Opptatt"
+		}
+		else if (this.childNodes[3].innerHTML == "Opptatt") {
+			this.childNodes[3].style.backgroundColor = "green";
+			this.childNodes[3].style.backgroundColor = "green";
+			this.childNodes[3].innerHTML = "Ledig"
+		}
+	}
+}
+function loginFunction(){
+	if (document.getElementById("LoginCode").value == "TestKode1"){
+		document.getElementById("Username").innerHTML = "Anders";
+		document.getElementById("LoginButton").style.display = "none";
+		document.getElementById("LoginCode").style.display = "none";
+	}
+}
+</script>
 </body>
+
 </html>
