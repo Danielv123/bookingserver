@@ -129,11 +129,11 @@ function statusChangeFunction(){
   "headers": {
     "Content-Type": "application/json"
   },
-  "data": JSON.stringify({name: "Daniel Vestol",
-			pass: 123,
-			room: "RAM",
-			from: "Thu Jan 03 2019 14:36:03 GMT+0100 (Central European Standard Time)",
-			to: "Thu Jan 03 2019 15:36:03 GMT+0100 (Central European Standard Time)"
+  "data": JSON.stringify({name: document.getElementById("Username").innerHTML,
+			pass: document.getElementById("LoginCode").value,
+			room: "Anode",
+			from: moment(this.childNodes[1].innerHTML, "hh:mm").toDate(),
+			to: moment(this.childNodes[1].innerHTML, "hh:mm").add(30, "minutes").toDate()
 		}),
 };
 $.ajax(settings).done(function (response) {
