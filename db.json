@@ -1,0 +1,65 @@
+{
+  "rooms": [
+    {
+      "name": "Anode",
+      "roomNumber": 136,
+      "desc": "",
+      "booking": []
+    },
+    {
+      "name": "Katode",
+      "roomNumber": 139,
+      "desc": "",
+      "booking": []
+    },
+    {
+      "name": "Coloumb",
+      "roomNumber": 148,
+      "desc": "",
+      "booking": []
+    },
+    {
+      "name": "AC",
+      "roomNumber": 119,
+      "desc": "",
+      "booking": []
+    },
+    {
+      "name": "DC",
+      "roomNumber": 118,
+      "desc": "",
+      "booking": []
+    },
+    {
+      "name": "RAM",
+      "roomNumber": 110,
+      "desc": "Inne på VG1",
+      "booking": []
+    },
+    {
+      "name": "Rho",
+      "roomNumber": 144,
+      "desc": "Lærerenes rom",
+      "booking": []
+    }
+  ],
+  "users": [
+    {
+      "PIN": 1234,
+      "name": "Daniel",
+      "displayName": "Daniel Vestøl",
+      "admin": true
+    },
+    {
+      "PIN": 123,
+      "name": "Anders",
+      "displayName": "Anders_g",
+      "admin": true
+    },
+    {
+      "PIN": 1990,
+      "name": "Kjell",
+      "displayName": "Kjell Grønbeck"
+    }
+  ]
+}
