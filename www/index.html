@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="moment.min.js">
+</script>
+<script src="jquery-3.3.1.min.js">
+</script>
 <style>
 table#t01{
 	width: 100%;
@@ -118,6 +122,23 @@ timeSlots.forEach(timeslot => {
 });
 function statusChangeFunction(){
 	if (!document.getElementById("Username").innerHTML == ""){
+	var settings = {
+  "url": "/api/booking",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({name: "Daniel Vestol",
+			pass: 123,
+			room: "RAM",
+			from: "Thu Jan 03 2019 14:36:03 GMT+0100 (Central European Standard Time)",
+			to: "Thu Jan 03 2019 15:36:03 GMT+0100 (Central European Standard Time)"
+		}),
+};
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
 		if (this.childNodes[3].innerHTML == "Ledig") {
 			this.childNodes[1].style.backgroundColor = "#eeee17";
 			this.childNodes[3].style.backgroundColor = "#eeee17";
@@ -142,6 +163,14 @@ function loginFunction(){
 		document.getElementById("LoginCode").style.display = "none";
 	}
 }
+var settings = {
+  "url": "/api/rooms",
+  "method": "GET",
+  "timeout": 0,
+};
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
 </script>
 </body>
 
