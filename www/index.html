@@ -31,7 +31,7 @@ table#t01 th, tr{
 <h1 style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom Anode 136<B></h1>
 
 
-<input type="text" name="LoginCode" id="LoginCode" value="TestKode1">
+<input type="text" name="LoginCode" id="LoginCode" value="123">
 <button onclick="loginFunction()" id="LoginButton">Login</button>
 <p id="Username"></p>
 
@@ -134,7 +134,7 @@ function statusChangeFunction(){
 			room: "RAM",
 			from: "Thu Jan 03 2019 14:36:03 GMT+0100 (Central European Standard Time)",
 			to: "Thu Jan 03 2019 15:36:03 GMT+0100 (Central European Standard Time)"
-		})
+		}),
 };
 $.ajax(settings).done(function (response) {
   console.log(response);
@@ -157,7 +157,7 @@ $.ajax(settings).done(function (response) {
 	}
 }
 function loginFunction(){
-	if (document.getElementById("LoginCode").value == "TestKode1"){
+	if (document.getElementById("LoginCode").value == "123"){
 		document.getElementById("Username").innerHTML = "Anders";
 		document.getElementById("LoginButton").style.display = "none";
 		document.getElementById("LoginCode").style.display = "none";
