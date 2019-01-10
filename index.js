@@ -50,7 +50,39 @@ app.post("/api/booking", (req, res) => {
         })
     }
 })
+app.get("/api/users", (req, res) => {
+    res.send(db.users.map(user => {
+        let tempUser = JSON.parse(JSON.stringify(user))
+        delete tempUser.PIN
+        return tempUser
+    }))
+})
+app.post("/api/addUser", (req, res) => {
+    if (req.body && req.body.pass && authenticated(req.body.pass) == 2
+        && req.body.newUser
+        && req.body.newUser.PIN
+        && req.body.newUser.name
+        && req.body.newUser.displayName) {
 
+    } else {
+        res.send({
+            ok: false,
+            msg: "Input validation/auth failed",
+        })
+    }
+})
+app.post("/api/removeUser", (req, res) => {
+
+})
+app.post("/api/changePin", (req, res) => {
+    // do not allow duplicate PINs as we want to use them for usernameless logons
+})
+app.post("/api/admin/promote", (req, res) => {
+
+})
+app.post("/api/admin/demote", (req, res) => {
+
+})
 function authenticated(PIN = "nope") {
     if (isNaN(Number(PIN))) {
         return 0;
