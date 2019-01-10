@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "b05aadc5-8bdd-4831-aad8-3e00d215aa7f",
+		"name": "booking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/api/booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5a0aa262-a5d5-4834-85d1-12676bf4a213",
+						"exec": [
+							"pm.test(\"Returns a success\", function () {",
+							"    var data = pm.response.json();",
+							"    pm.expect(data.ok).to.be.true;",
+							"});",
+							"pm.test(\"returns the name provided in the body\", function () {",
+							"    var data = pm.response.json();",
+							"    pm.expect(data.data.name).to.equal(\"Daniel Vestol\");",
+							"});",
+							"pm.test(\"the booking server added the displaytime to the booking listing\", function () {",
+							"    var data = pm.response.json();",
+							"    pm.expect(data.data.displayTime).to.exist;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "charset",
+						"value": "U",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Daniel Vestol\",\n\t\"pass\": 123,\n\t\"room\": \"RAM\",\n\t\"from\": \"Thu Jan 03 2019 14:36:03 GMT+0100 (Central European Standard Time)\",\n\t\"to\": \"Thu Jan 03 2019 15:36:03 GMT+0100 (Central European Standard Time)\"\n}\n"
+				},
+				"url": {
+					"raw": "localhost:3000/api/booking",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"booking"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "Daniel"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "16488182-a722-4702-a7fb-bbee9955488a",
+						"exec": [
+							"pm.test(\"Returns a valid JSON array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(Array.isArray(jsonData)).to.eql(true);",
+							"});",
+							"pm.test(\"JSON array contains objects describing our 7 rooms\", function () {",
+							"    var data = pm.response.json();",
+							"    pm.expect(data).to.have.lengthOf.above(6, \"Why do we have so few rooms???\");",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/rooms",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

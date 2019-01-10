@@ -1,0 +1,20 @@
+{
+  "name": "bookingserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "newman run .\\tests\\Postman\\booking.postman_collection.json"
+  },
+  "author": "Daniel, Anders, Sean",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "fs-extra": "^7.0.1",
+    "moment": "^2.23.0"
+  },
+  "devDependencies": {
+    "newman": "^4.3.1"
+  }
+}
