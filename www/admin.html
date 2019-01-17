@@ -7,6 +7,8 @@
     <script language="JavaScript" type="text/javascript" src="jquery-3.3.1.min.js"></script>
 </head>
 <body>
+    <a href="/">Homepage</a>
+    <h2>User management</h2>
     <ul id="userList">
         
     </ul>
@@ -16,9 +18,10 @@
             console.log(users)
             for (var i = 0; i < users.length; i++) {
                 var user = users[i];
-                userList.innerHTML += '<li><p id="name" style="display:none;">'+user.name+'</p><input class="displayName" style="width:300px;display: inline-block;" value="' + user.displayName + '"></input>'+
-                '<input style = "width:100px;" placeholder = "new PIN" ></input >'+
-                '<input class="updateInformation" type="button" value="Update information"></input></li>'
+                userList.innerHTML += '<li><p id="name" style="display:none;">' + user.name + '</p><input class="displayName" style="width:300px;display: inline-block;" value="' + user.displayName + '"></input>' +
+                    '<input style = "width:100px;" placeholder = "new PIN" ></input >' +
+                    '<span>Admin: </span><input id="userIsAdmin" type="checkbox"></input>'
+                    '<input class="updateInformation" type="button" value="Update information"></input></li>'
             }
             var updateInformationButtons = document.querySelectorAll(".updateInformation")
             for (var o = 0; o < updateInformationButtons.length; o++) {
@@ -40,12 +43,54 @@
                         },
                         "data": JSON.stringify(data),
                     };
-                    $.ajax(settings).done(function (response) {
-                        console.log(response);
+                    $.ajax(settings).done(function (resp) {
+                        if (resp.ok) {
+                            alert(resp.msg)
+                            document.location = document.location
+                        } else {
+                            alert(resp.msg)
+                        }
                     });
                 }
             }
         });
+    </script>
+    <div id="addUser">
+        <h2>Add new user</h2>
+        <input id="username" placeholder="username" /><br />
+        <input id="displayName" placeholder="Display name" /><br />
+        <input id="PIN" placeholder="PIN code" /><br />
+        <span>Admin: </span><input id="admin" type="checkbox" />
+        <input id="createUser" type="button" value="Create new user" />
+    </div>
+    <script>
+        document.querySelector("#createUser").onclick = function (e) {
+            var settings = {
+                "url": "/api/addUser",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "data": JSON.stringify({
+                    newUser: {
+                        name: document.querySelector("#username").value,
+                        displayName: document.querySelector("#displayName").value,
+                        PIN: document.querySelector("#PIN").value,
+                        admin: document.querySelector("#admin").value,
+                    },
+                    PIN: localStorage.PIN,
+                }),
+            };
+            $.ajax(settings).done(function (resp) {
+                if (resp.ok) {
+                    alert(resp.msg)
+                    document.location = document.location
+                } else {
+                    alert(resp.msg)
+                }
+            });
+        }
     </script>
 </body>
 </html>

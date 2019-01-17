@@ -71,12 +71,28 @@ app.get("/api/users", (req, res) => {
     }))
 })
 app.post("/api/addUser", (req, res) => {
-    if (req.body && req.body.pass && authenticated(req.body.pass) == 2
+    if (req.body && req.body.PIN && authenticated(req.body.PIN) == 2
         && req.body.newUser
         && req.body.newUser.PIN
         && req.body.newUser.name
         && req.body.newUser.displayName) {
-
+        if (isPinUnique(req.body.newUser.PIN)) {
+            db.users.push({
+                PIN: Number(req.body.newUser.PIN),
+                name: req.body.newUser.name,
+                displayName: req.body.newUser.displayName,
+                admin: req.body.newUser.admin,
+            })
+            res.send({
+                ok: true,
+                msg: "New user created",
+            })
+        } else {
+            res.send({
+                ok: false,
+                msg: "PIN unavailable. Please pick a different PIN."
+            })
+        }
     } else {
         res.send({
             ok: false,
@@ -122,12 +138,6 @@ app.post("/api/editUser", (req, res) => {
             msg: "Validation/authentication failed. Make sure you are an admin"
         })
     }
-})
-app.post("/api/admin/promote", (req, res) => {
-    
-})
-app.post("/api/admin/demote", (req, res) => {
-    
 })
 function isPinUnique(PIN) {
     if (!PIN || isNaN(Number(PIN))) {
