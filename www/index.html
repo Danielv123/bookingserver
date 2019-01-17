@@ -172,7 +172,7 @@ $.get( "/api/rooms", function(data) {
 	for(var i = 0; i < data[0].booking.length; i++){
 		for(var i2 = 0; i2 < timeSlots.length; i2++){
 			if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i2].childNodes[1].innerHTML){
-				document.getElementById(timeSlots[i2].style.display = "none")
+				timeSlots[i2].style.display = "none"
 			}
 		// use HH with capital letters (24h vs 12h) and mm with small letters (00 vs 01)
 			if(moment(data[0].booking[i].from).format("HH:mm") == timeSlots[i2].childNodes[1].innerHTML){
