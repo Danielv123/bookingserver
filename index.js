@@ -35,12 +35,20 @@ app.post("/api/booking", (req, res) => {
                 to: req.body.to,
                 displayTime,
             };
-            rom.booking.push(booking);
-            res.send({
-                ok: true,
-                msg: "Booked room",
-                data: booking
-            });
+            // check that it isn't already booked
+            if (!rom.booking.find(book => book.from == booking.from)) {
+                rom.booking.push(booking);
+                res.send({
+                    ok: true,
+                    msg: "Booked room",
+                    data: booking
+                });
+            } else {
+                res.send({
+                    ok: false,
+                    msg: "Room already booked for that period"
+                })
+            }
             console.log("booked room")
         } else {
             res.send({
