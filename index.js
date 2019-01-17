@@ -6,6 +6,11 @@ const bodyParser = require("body-parser")
 var app = express()
 app.use(bodyParser.json())
 app.use(express.static('www'))
+// make sure all responses are sent as UTF-8 to support æ,ø and å
+app.use(function (req, res, next) {
+    res.setHeader('charset', 'utf-8')
+    next()
+});
 
 let db = JSON.parse(fs.readFileSync("db.json"));
 
@@ -72,17 +77,57 @@ app.post("/api/addUser", (req, res) => {
     }
 })
 app.post("/api/removeUser", (req, res) => {
-
+    
 })
-app.post("/api/changePin", (req, res) => {
+app.post("/api/editUser", (req, res) => {
     // do not allow duplicate PINs as we want to use them for usernameless logons
+    console.log(req.body);
+    if (req.body.name &&
+        typeof req.body.name == "string" &&
+        req.body.newDisplayName &&
+        typeof req.body.newDisplayName == "string" &&
+        typeof req.body.newPin == "string" &&
+        authenticated(req.body.PIN) == 2) {
+
+        // change name
+        getUserByName(req.body.name).displayName = req.body.newDisplayName
+
+        // change PIN if asked for
+        let pinMsg = "";
+        if (req.body.newPin && !isNaN(Number(req.body.newPin))){
+            if (isPinUnique(req.body.newPin)) {
+                pinMsg = "new PIN was unique, perform changes"
+                console.log("User before change: "+JSON.stringify(getUserByName(req.body.name)))
+                getUserByName(req.body.name).PIN = Number(req.body.newPin)
+                console.log("User after change:  " + JSON.stringify(getUserByName(req.body.name)))
+            } else {
+                pinMsg = "new PIN was not unique, not changing anything"
+            }
+        }
+        res.send({
+            ok: true,
+            msg: "name updated, "+pinMsg
+        })
+    } else {
+        res.send({
+            ok: false,
+            msg: "Validation/authentication failed. Make sure you are an admin"
+        })
+    }
 })
 app.post("/api/admin/promote", (req, res) => {
-
+    
 })
 app.post("/api/admin/demote", (req, res) => {
-
+    
 })
+function isPinUnique(PIN) {
+    if (!PIN || isNaN(Number(PIN))) {
+        throw new Error("We aren't we getting a PIN?" + PIN)
+    } else {
+        return !db.users.filter(user => user.PIN === Number(PIN)).length
+    }
+}
 function authenticated(PIN = "nope") {
     if (isNaN(Number(PIN))) {
         return 0;
@@ -99,5 +144,8 @@ function authenticated(PIN = "nope") {
     } else {
         return 1;
     }
+}
+function getUserByName(name) {
+    return db.users.find(user => user.name == name)
 }
 app.listen(3000)
