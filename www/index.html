@@ -23,6 +23,7 @@ table#t01 th, tr{
 <title>Åssiden Booking System</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="300";>
 </head>
 <body style="margin:0px;">
 
@@ -33,6 +34,7 @@ table#t01 th, tr{
 
 <input type="text" name="LoginCode" id="LoginCode" value="123">
 <button onclick="loginFunction()" id="LoginButton">Login</button>
+<button onclick="document.location = document.location" id="RefreshButton">Refresh</button>
 <p id="Username"></p>
 
 <div style="background-color:white;color:white;">.</div>
@@ -144,32 +146,44 @@ $.ajax(settings).done(function (response) {
 			this.childNodes[3].style.backgroundColor = "#eeee17";
 			this.childNodes[3].innerHTML = "Booket av " + document.getElementById("Username").innerHTML
 		}
-		else if (this.childNodes[3].innerHTML == "Booket") {
-			this.childNodes[3].style.backgroundColor = "crimson";
-			this.childNodes[3].style.backgroundColor = "crimson";
-			this.childNodes[3].innerHTML = "Opptatt"
-		}
-		else if (this.childNodes[3].innerHTML == "Opptatt") {
-			this.childNodes[3].style.backgroundColor = "green";
-			this.childNodes[3].style.backgroundColor = "green";
-			this.childNodes[3].innerHTML = "Ledig"
-		}
 	}
 }
+
 function loginFunction(){
-	if (document.getElementById("LoginCode").value == "123"){
-		document.getElementById("Username").innerHTML = "Anders";
-		document.getElementById("LoginButton").style.display = "none";
-		document.getElementById("LoginCode").style.display = "none";
-	}
+	var settings = {
+	"url": "/api/users",
+	"method": "GET",
+	"timeout": 0,
+	};
+	$.get("/api/users", function(data){
+		if (document.getElementById("LoginCode").value == "123"){
+			document.getElementById("Username").innerHTML = "Anders";
+			document.getElementById("LoginButton").style.display = "none";
+			document.getElementById("LoginCode").style.display = "none";
+		}
+	});
 }
 var settings = {
-  "url": "/api/rooms",
-  "method": "GET",
-  "timeout": 0,
+	"url": "/api/rooms",
+	"method": "GET",
+	"timeout": 0,
 };
-$.ajax(settings).done(function (response) {
-  console.log(response);
+$.get( "/api/rooms", function(data) {
+	for(var i = 0; i < data[0].booking.length; i++){
+		for(var i2 = 0; i2 < timeSlots.length; i2++){
+			if(moment(data[0].booking[i].from).format("hh:mm") == timeSlots[i2].childNodes[1].innerHTML){
+				if(moment(data[0].booking[i].from).format("hh:mm") == moment().format("hh:mm")){
+					timeSlots[i2].childNodes[1].style.backgroundColor = "Crimson";
+					timeSlots[i2].childNodes[3].style.backgroundColor = "Crimson";
+					timeSlots[i2].childNodes[3].innerHTML = "Opptatt";
+				}else{
+					timeSlots[i2].childNodes[1].style.backgroundColor = "#eeee17";
+					timeSlots[i2].childNodes[3].style.backgroundColor = "#eeee17";
+					timeSlots[i2].childNodes[3].innerHTML = "Booket av " + data[0].booking[i].name;
+				}
+			}
+		}
+	}
 });
 </script>
 </body>
