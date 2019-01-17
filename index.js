@@ -89,7 +89,7 @@ function authenticated(PIN = "nope") {
     } else {
         var PIN = Number(PIN)
     }
-    let users = db.users.filter(user => user.PIN = PIN);
+    let users = db.users.filter(user => user.PIN === PIN);
     if (users.length > 1) {
         throw new Error("Yikes, there should never be duplicate PINs! (see PIN " + PIN + ")")
     } else if (users.length < 1) {
