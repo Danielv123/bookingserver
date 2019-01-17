@@ -32,10 +32,10 @@ table#t01 th, tr{
 <h1 style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom Anode 136<B></h1>
 
 
+<p id="Username"></p>
 <input type="text" name="LoginCode" id="LoginCode" value="123">
 <button onclick="loginFunction()" id="LoginButton">Login</button>
 <button onclick="document.location = document.location" id="RefreshButton">Refresh</button>
-<p id="Username"></p>
 
 <div style="background-color:white;color:white;">.</div>
 <table id="t01">
@@ -134,8 +134,8 @@ function statusChangeFunction(){
   "data": JSON.stringify({name: document.getElementById("Username").innerHTML,
 			pass: document.getElementById("LoginCode").value,
 			room: "Anode",
-			from: moment(this.childNodes[1].innerHTML, "hh:mm").toDate(),
-			to: moment(this.childNodes[1].innerHTML, "hh:mm").add(30, "minutes").toDate()
+			from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
+			to: moment(this.childNodes[1].innerHTML, "HH:mm").add(30, "minutes").toDate()
 		}),
 };
 $.ajax(settings).done(function (response) {
@@ -171,8 +171,15 @@ var settings = {
 $.get( "/api/rooms", function(data) {
 	for(var i = 0; i < data[0].booking.length; i++){
 		for(var i2 = 0; i2 < timeSlots.length; i2++){
-			if(moment(data[0].booking[i].from).format("hh:mm") == timeSlots[i2].childNodes[1].innerHTML){
-				if(moment(data[0].booking[i].from).format("hh:mm") == moment().format("hh:mm")){
+			if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i2].childNodes[1].innerHTML){
+				document.getElementById(timeSlots[i2].style.display = "none")
+			}
+		// use HH with capital letters (24h vs 12h) and mm with small letters (00 vs 01)
+			if(moment(data[0].booking[i].from).format("HH:mm") == timeSlots[i2].childNodes[1].innerHTML){
+				var compareDate = moment().format();
+				var startDate = moment(data[0].booking[i].from).format();
+				var endDate = moment(data[0].booking[i].to).format();
+				if(compareDate <= endDate && compareDate >= startDate){
 					timeSlots[i2].childNodes[1].style.backgroundColor = "Crimson";
 					timeSlots[i2].childNodes[3].style.backgroundColor = "Crimson";
 					timeSlots[i2].childNodes[3].innerHTML = "Opptatt";
