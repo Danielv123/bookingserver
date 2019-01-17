@@ -63,6 +63,22 @@ app.post("/api/booking", (req, res) => {
         })
     }
 })
+app.post("/api/unbook", (req, res) => {
+    if (req.body.PIN &&
+        req.body.from &&
+        authenticated(req.PIN)) {
+        console.log(req.body);
+        res.send({
+            ok: true,
+            msg: "Unbooked room"
+        })
+    } else {
+        res.send({
+            ok: false,
+            msg: "unauthenticated"
+        })
+    }
+});
 app.get("/api/users", (req, res) => {
     res.send(db.users.map(user => {
         let tempUser = JSON.parse(JSON.stringify(user))
