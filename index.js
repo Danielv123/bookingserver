@@ -66,8 +66,7 @@ app.post("/api/booking", (req, res) => {
 app.post("/api/unbook", (req, res) => {
     if (req.body.PIN &&
         req.body.from &&
-        authenticated(req.PIN)) {
-        console.log(req.body);
+        authenticated(req.body.PIN)) {
         res.send({
             ok: true,
             msg: "Unbooked room"

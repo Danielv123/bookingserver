@@ -122,33 +122,51 @@ var timeSlots = document.querySelectorAll(".timeSlot");
 for(var i = 0; i < timeSlots.length; i++){
 	timeSlots[i].onclick = statusChangeFunction;
 }
+
 function statusChangeFunction(){
 	if (!document.getElementById("Username").innerHTML == ""){
-	var settings = {
-  "url": "/api/booking",
-  "method": "POST",
-  "timeout": 0,
-  "headers": {
-    "Content-Type": "application/json"
-  },
-  "data": JSON.stringify({name: document.getElementById("Username").innerHTML,
-			pass: document.getElementById("LoginCode").value,
-			room: "Anode",
-			from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
-			to: moment(this.childNodes[1].innerHTML, "HH:mm").add(30, "minutes").toDate()
-		}),
-};
-$.ajax(settings).done(function (response) {
-  console.log(response);
-});
-		if (this.childNodes[3].innerHTML == "Ledig") {
+		if(this.childNodes[3].innerHTML == "Booket av " + document.getElementById("Username").innerHTML){
+			this.childNodes[1].style.backgroundColor = "green";
+			this.childNodes[3].style.backgroundColor = "green";
+			this.childNodes[3].innerHTML = "Ledig";
+		var settings = {
+			"url": "/api/unbook",
+			"method": "POST",
+			"timeout": 0,
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"data": JSON.stringify({PIN: Number(document.getElementById("LoginCode").value),
+				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
+			}),
+		};
+		$.ajax(settings).done(function (response) {
+			console.log(response);
+		});
+		}else if (this.childNodes[3].innerHTML == "Ledig") {
+			var settings = {
+			"url": "/api/booking",
+			"method": "POST",
+			"timeout": 0,
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"data": JSON.stringify({name: document.getElementById("Username").innerHTML,
+				pass: document.getElementById("LoginCode").value,
+				room: "Anode",
+				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
+				to: moment(this.childNodes[1].innerHTML, "HH:mm").add(30, "minutes").toDate()
+			}),
+			};
+			$.ajax(settings).done(function (response) {
+				console.log(response);
+			});
 			this.childNodes[1].style.backgroundColor = "#eeee17";
 			this.childNodes[3].style.backgroundColor = "#eeee17";
-			this.childNodes[3].innerHTML = "Booket av " + document.getElementById("Username").innerHTML
+			this.childNodes[3].innerHTML = "Booket av " + document.getElementById("Username").innerHTML;
 		}
 	}
 }
-
 function loginFunction(){
 	var settings = {
 	"url": "/api/users",
@@ -172,7 +190,7 @@ $.get( "/api/rooms", function(data) {
 	for(var i = 0; i < data[0].booking.length; i++){
 		for(var i2 = 0; i2 < timeSlots.length; i2++){
 			if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i2].childNodes[1].innerHTML){
-				timeSlots[i2].style.display = "none"
+				timeSlots[i2].style.display = "none";
 			}
 		// use HH with capital letters (24h vs 12h) and mm with small letters (00 vs 01)
 			if(moment(data[0].booking[i].from).format("HH:mm") == timeSlots[i2].childNodes[1].innerHTML){
@@ -183,6 +201,7 @@ $.get( "/api/rooms", function(data) {
 					timeSlots[i2].childNodes[1].style.backgroundColor = "Crimson";
 					timeSlots[i2].childNodes[3].style.backgroundColor = "Crimson";
 					timeSlots[i2].childNodes[3].innerHTML = "Opptatt";
+					console.log(data[0]);
 				}else{
 					timeSlots[i2].childNodes[1].style.backgroundColor = "#eeee17";
 					timeSlots[i2].childNodes[3].style.backgroundColor = "#eeee17";
