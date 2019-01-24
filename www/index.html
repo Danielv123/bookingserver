@@ -193,7 +193,7 @@ function loginFunction(){
 	};
 	$.ajax(settings).done( function(data){
 		if(data.authenticated == 1 || data.authenticated == 2){
-			localStorage.setItem("PIN", document.getElementById("LoginCode").value);
+			localStorage.setItem("PIN", document.getElementById("LoginCode").value || localStorage.PIN);
 			localStorage.setItem("Username", data.user.displayName)
 			document.getElementById("Username").innerHTML = localStorage.Username;
 			document.getElementById("LoginButton").style.display = "none";
@@ -216,29 +216,32 @@ var settings = {
 	"timeout": 0,
 };
 $.get( "/api/rooms", function(data) {
-	for(var i = 0; i < data[0].booking.length; i++){
-		for(var i2 = 0; i2 < timeSlots.length; i2++){
-			if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i2].childNodes[1].innerHTML){
-				timeSlots[i2].style.display = "none";
+for(i1 = 0; i1 < data.length; i1++){
+	if(data[i1].name == getParameterByName("roomName", document.location)){
+	for(var i2 = 0; i2 < data[i1].booking.length; i2++){
+		for(var i3 = 0; i3 < timeSlots.length; i3++){
+			if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i3].childNodes[1].innerHTML){
+				timeSlots[i3].style.display = "none";
 			}
 		// use HH with capital letters (24h vs 12h) and mm with small letters (00 vs 01)
-			if(moment(data[0].booking[i].from).format("HH:mm") == timeSlots[i2].childNodes[1].innerHTML){
+			if(moment(data[i1].booking[i2].from).format("HH:mm") == timeSlots[i3].childNodes[1].innerHTML){
 				var compareDate = moment().format();
-				var startDate = moment(data[0].booking[i].from).format();
-				var endDate = moment(data[0].booking[i].to).format();
+				var startDate = moment(data[i1].booking[i2].from).format();
+				var endDate = moment(data[i1].booking[i2].to).format();
 				if(compareDate <= endDate && compareDate >= startDate){
-					timeSlots[i2].childNodes[1].style.backgroundColor = "Crimson";
-					timeSlots[i2].childNodes[3].style.backgroundColor = "Crimson";
-					timeSlots[i2].childNodes[3].innerHTML = "Opptatt";
-					console.log(data[0]);
+					timeSlots[i3].childNodes[1].style.backgroundColor = "Crimson";
+					timeSlots[i3].childNodes[3].style.backgroundColor = "Crimson";
+					timeSlots[i3].childNodes[3].innerHTML = "Opptatt";
 				}else{
-					timeSlots[i2].childNodes[1].style.backgroundColor = "#eeee17";
-					timeSlots[i2].childNodes[3].style.backgroundColor = "#eeee17";
-					timeSlots[i2].childNodes[3].innerHTML = "Booket av " + data[0].booking[i].name;
+					timeSlots[i3].childNodes[1].style.backgroundColor = "#eeee17";
+					timeSlots[i3].childNodes[3].style.backgroundColor = "#eeee17";
+					timeSlots[i3].childNodes[3].innerHTML = "Booket av " + data[i1].booking[i2].name;
 				}
 			}
 		}
 	}
+	}
+}
 });
 </script>
 </body>
