@@ -17,6 +17,13 @@ let db = JSON.parse(fs.readFileSync("db.json"));
 app.get('/api/rooms', function (req, res) {
     res.send(db.rooms);
 });
+app.post("/api/auth", (req, res) => {
+    if (req.body && req.body.PIN) {
+        res.send({
+            authenticated: authenticated(req.body.PIN)
+        })
+    }
+})
 app.post("/api/booking", (req, res) => {
     // validate input (otherwise reject request)
     if (req.body && req.body.name
@@ -65,12 +72,37 @@ app.post("/api/booking", (req, res) => {
 })
 app.post("/api/unbook", (req, res) => {
     if (req.body.PIN &&
+        req.body.room &&
+        typeof req.body.room == "string" &&
         req.body.from &&
+        moment(req.body.from).isValid() &&
         authenticated(req.body.PIN)) {
-        res.send({
-            ok: true,
-            msg: "Unbooked room"
-        })
+		let roomDb = db.rooms.find(r => r.name == req.body.room)
+        if (roomDb) {
+            let didUnbook = false
+            roomDb.booking = roomDb.booking.filter(book => {
+                if (book.from == req.body.from) {
+                    console.log("Removed booking "); console.log(book)
+                    res.send({
+                        ok: true,
+                        msg: "Unbooked room"
+                    })
+                    didUnbook = true
+                    return false
+                } else {
+                    return true
+                }
+            })
+            if (!didUnbook) res.send({
+                ok: false,
+                msg: "Didn't unbook, couldn't find reservation"
+            })
+        } else {
+            res.send({
+                ok: false,
+                msg: "Room not found"
+            })
+        }
     } else {
         res.send({
             ok: false,
@@ -116,7 +148,28 @@ app.post("/api/addUser", (req, res) => {
     }
 })
 app.post("/api/removeUser", (req, res) => {
-    
+    if (req.body.PIN &&
+        authenticated(req.body.PIN) == 2 &&
+        req.body.name) {
+        db.users = db.users.filter(user => {
+            if (user.name == req.body.name) {
+                console.log("Deleted user")
+                console.log(user)
+                res.send({
+                    ok: true,
+                    msg: `Deleted user ${user.name} (${user.displayName})`
+                })
+                return false
+            } else {
+                return true
+            }
+        })
+    } else {
+        res.send({
+            ok: false,
+            msg: "Unauthenticated"
+        })
+    }
 })
 app.post("/api/editUser", (req, res) => {
     // do not allow duplicate PINs as we want to use them for usernameless logons
