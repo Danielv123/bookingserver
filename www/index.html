@@ -29,11 +29,11 @@ table#t01 th, tr{
 
 
 
-<h1 style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom Anode 136<B></h1>
+<h1 id="RoomNameHeader" style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom <B></h1>
 
 
 <p id="Username"></p>
-<input type="text" name="LoginCode" id="LoginCode" value="123">
+<input type="text" name="LoginCode" id="LoginCode">
 <button onclick="loginFunction()" id="LoginButton">Login</button>
 <button onclick="document.location = document.location" id="RefreshButton">Refresh</button>
 <button onclick="logoutFunction()" id="LogoutButton">Logout</button>
@@ -178,28 +178,33 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+document.getElementById("RoomNameHeader").innerHTML = "Booking for rom " + getParameterByName("roomName", document.location);
 function loginFunction(){
 	var settings = {
-	"url": "/api/users",
-	"method": "GET",
-	"timeout": 0,
-	};
-	var settings = {
 	"url": "/api/auth",
-	"method": "post",
+	"method": "POST",
 	"timeout": 0,
+	"headers": {
+		"Content-Type": "application/json"
+	},
+	"data": JSON.stringify({
+		PIN: document.getElementById("LoginCode").value || localStorage.PIN,
+	})
 	};
-	$.get("/api/users", function(data){
-		if (document.getElementById("LoginCode").value == "123"){
+	$.ajax(settings).done( function(data){
+		if(data.authenticated == 1 || data.authenticated == 2){
 			localStorage.setItem("PIN", document.getElementById("LoginCode").value);
-			document.getElementById("Username").innerHTML = "Anders";
+			localStorage.setItem("Username", data.user.displayName)
+			document.getElementById("Username").innerHTML = localStorage.Username;
 			document.getElementById("LoginButton").style.display = "none";
 			document.getElementById("LoginCode").style.display = "none";
 		}
 	});
 }
+loginFunction();
 function logoutFunction(){
-	localStorage.removeItem("PIN");
+	delete localStorage.PIN
+	delete localStorage.Username
 	document.getElementById("LoginButton").style.display = "";
 	document.getElementById("LoginCode").style.display = "";
 	document.getElementById("Username").innerHTML = "";

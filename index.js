@@ -19,8 +19,13 @@ app.get('/api/rooms', function (req, res) {
 });
 app.post("/api/auth", (req, res) => {
     if (req.body && req.body.PIN) {
+		let user = db.users.find(usr => usr.PIN == req.body.PIN)
         res.send({
-            authenticated: authenticated(req.body.PIN)
+            authenticated: authenticated(req.body.PIN),
+			user:{
+				name: user.name,
+				displayName: user.displayName,
+			}
         })
     }
 })
