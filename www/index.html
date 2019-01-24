@@ -139,7 +139,7 @@ function statusChangeFunction(){
 			},
 			"data": JSON.stringify({PIN: Number(document.getElementById("LoginCode").value),
 				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
-				room: "Anode"
+				room: getParameterByName("roomName",document.location)
 			}),
 		};
 		$.ajax(settings).done(function (response) {
@@ -155,7 +155,7 @@ function statusChangeFunction(){
 			},
 			"data": JSON.stringify({name: document.getElementById("Username").innerHTML,
 				pass: document.getElementById("LoginCode").value,
-				room: "Anode",
+				room: getParameterByName("roomName",document.location),
 				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
 				to: moment(this.childNodes[1].innerHTML, "HH:mm").add(30, "minutes").toDate()
 			}),
@@ -169,14 +169,29 @@ function statusChangeFunction(){
 		}
 	}
 }
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 function loginFunction(){
 	var settings = {
 	"url": "/api/users",
 	"method": "GET",
 	"timeout": 0,
 	};
+	var settings = {
+	"url": "/api/auth",
+	"method": "post",
+	"timeout": 0,
+	};
 	$.get("/api/users", function(data){
 		if (document.getElementById("LoginCode").value == "123"){
+			localStorage.setItem("PIN", document.getElementById("LoginCode").value);
 			document.getElementById("Username").innerHTML = "Anders";
 			document.getElementById("LoginButton").style.display = "none";
 			document.getElementById("LoginCode").style.display = "none";
@@ -184,6 +199,7 @@ function loginFunction(){
 	});
 }
 function logoutFunction(){
+	localStorage.removeItem("PIN");
 	document.getElementById("LoginButton").style.display = "";
 	document.getElementById("LoginCode").style.display = "";
 	document.getElementById("Username").innerHTML = "";
