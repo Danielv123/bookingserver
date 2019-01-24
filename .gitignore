@@ -1,2 +1,15 @@
 node_modules
 db.json
+\.vs/bookingserver/v15/\.suo
+
+\.vs/slnx\.sqlite
+
+bin/Microsoft\.NodejsTools\.WebRole\.dll
+
+obj/Debug/bookingserver\.njsproj\.CoreCompileInputs\.cache
+
+obj/Debug/bookingserver\.njsprojAssemblyReference\.cache
+
+obj/Release/bookingserver\.njsproj\.CoreCompileInputs\.cache
+
+\.vs/
