@@ -20,7 +20,7 @@
                 var user = users[i];
                 userList.innerHTML += '<li><p id="name" style="display:none;">' + user.name + '</p><input class="displayName" style="width:300px;display: inline-block;" value="' + user.displayName + '"></input>' +
                     '<input style = "width:100px;" placeholder = "new PIN" ></input >' +
-                    '<span>Admin: </span><input id="userIsAdmin" type="checkbox"></input>'
+                    '<span>Admin: </span><input id="userIsAdmin" type="checkbox"></input>' +
                     '<input class="updateInformation" type="button" value="Update information"></input></li>'
             }
             var updateInformationButtons = document.querySelectorAll(".updateInformation")

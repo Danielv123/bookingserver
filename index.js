@@ -19,17 +19,31 @@ app.get('/api/rooms', function (req, res) {
 });
 app.post("/api/auth", (req, res) => {
     if (req.body && req.body.PIN) {
-		let user = db.users.find(usr => usr.PIN == req.body.PIN)
+        let user = db.users.find(usr => usr.PIN == req.body.PIN)
+        if (user) {
+            res.send({
+                ok: true,
+                msg: "Authenticated",
+                authenticated: authenticated(req.body.PIN),
+                user: {
+                    name: user.name,
+                    displayName: user.displayName,
+                }
+            })
+        } else {
+            res.send({
+                ok: false,
+                msg: "Unauthenticated"
+            })
+        }
+    } else {
         res.send({
-            authenticated: authenticated(req.body.PIN),
-			user:{
-				name: user.name,
-				displayName: user.displayName,
-			}
+            ok: false,
+            msg: "Did not find PIN in req.body"
         })
     }
 })
-app.post("/api/booking", (req, res) => {
+app.post("/api/booking", async (req, res) => {
     // validate input (otherwise reject request)
     if (req.body && req.body.name
         && authenticated(req.body.pass)
@@ -50,6 +64,7 @@ app.post("/api/booking", (req, res) => {
             // check that it isn't already booked
             if (!rom.booking.find(book => book.from == booking.from)) {
                 rom.booking.push(booking);
+                await saveDatabase();
                 res.send({
                     ok: true,
                     msg: "Booked room",
@@ -75,7 +90,7 @@ app.post("/api/booking", (req, res) => {
         })
     }
 })
-app.post("/api/unbook", (req, res) => {
+app.post("/api/unbook", async (req, res) => {
     if (req.body.PIN &&
         req.body.room &&
         typeof req.body.room == "string" &&
@@ -98,6 +113,7 @@ app.post("/api/unbook", (req, res) => {
                     return true
                 }
             })
+            await saveDatabase()
             if (!didUnbook) res.send({
                 ok: false,
                 msg: "Didn't unbook, couldn't find reservation"
@@ -122,7 +138,7 @@ app.get("/api/users", (req, res) => {
         return tempUser
     }))
 })
-app.post("/api/addUser", (req, res) => {
+app.post("/api/addUser", async (req, res) => {
     if (req.body && req.body.PIN && authenticated(req.body.PIN) == 2
         && req.body.newUser
         && req.body.newUser.PIN
@@ -135,6 +151,7 @@ app.post("/api/addUser", (req, res) => {
                 displayName: req.body.newUser.displayName,
                 admin: req.body.newUser.admin,
             })
+            await saveDatabase()
             res.send({
                 ok: true,
                 msg: "New user created",
@@ -152,7 +169,7 @@ app.post("/api/addUser", (req, res) => {
         })
     }
 })
-app.post("/api/removeUser", (req, res) => {
+app.post("/api/removeUser", async (req, res) => {
     if (req.body.PIN &&
         authenticated(req.body.PIN) == 2 &&
         req.body.name) {
@@ -169,6 +186,7 @@ app.post("/api/removeUser", (req, res) => {
                 return true
             }
         })
+        await saveDatabase()
     } else {
         res.send({
             ok: false,
@@ -235,6 +253,9 @@ function authenticated(PIN = "nope") {
     } else {
         return 1;
     }
+}
+async function saveDatabase() {
+    return new Promise((resolve, reject) => fs.writeFile("db.json", JSON.stringify(db, null, 4), resolve))
 }
 function getUserByName(name) {
     return db.users.find(user => user.name == name)
