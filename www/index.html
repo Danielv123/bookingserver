@@ -45,8 +45,8 @@ table#t01 th, tr{
 		<th style="background-color: gray;">Status  </th>
 	</tr>
 	<tr class="timeSlot">
-		<th id="table7301">07:30</th>
-		<th id="table7302">Ledig</th>
+		<th>07:30</th>
+		<th>Ledig</th>
 	</tr>
 	<tr class="timeSlot">
 		<th>08:00</th>
@@ -194,7 +194,6 @@ function loginFunction(){
 	$.ajax(settings).done( function(data){
 		if(data.authenticated == 1 || data.authenticated == 2){
 			localStorage.setItem("PIN", document.getElementById("LoginCode").value || localStorage.PIN);
-			console.log(localStorage.PIN);
 			localStorage.setItem("Username", data.user.displayName)
 			document.getElementById("Username").innerHTML = localStorage.Username;
 			document.getElementById("LoginButton").style.display = "none";
