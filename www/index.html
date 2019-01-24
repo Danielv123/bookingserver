@@ -36,6 +36,7 @@ table#t01 th, tr{
 <input type="text" name="LoginCode" id="LoginCode" value="123">
 <button onclick="loginFunction()" id="LoginButton">Login</button>
 <button onclick="document.location = document.location" id="RefreshButton">Refresh</button>
+<button onclick="logoutFunction()" id="LogoutButton">Logout</button>
 
 <div style="background-color:white;color:white;">.</div>
 <table id="t01">
@@ -138,6 +139,7 @@ function statusChangeFunction(){
 			},
 			"data": JSON.stringify({PIN: Number(document.getElementById("LoginCode").value),
 				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
+				room: "Anode"
 			}),
 		};
 		$.ajax(settings).done(function (response) {
@@ -180,6 +182,12 @@ function loginFunction(){
 			document.getElementById("LoginCode").style.display = "none";
 		}
 	});
+}
+function logoutFunction(){
+	document.getElementById("LoginButton").style.display = "";
+	document.getElementById("LoginCode").style.display = "";
+	document.getElementById("Username").innerHTML = "";
+	document.getElementById("LoginCode").value = "";
 }
 var settings = {
 	"url": "/api/rooms",
