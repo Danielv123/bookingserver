@@ -238,7 +238,7 @@ function isPinUnique(PIN) {
     }
 }
 function authenticated(PIN = "nope") {
-    let PIN = Number(PIN)
+    PIN = Number(PIN)
     if (isNaN(Number(PIN))) {
         return 0;
     } else {
