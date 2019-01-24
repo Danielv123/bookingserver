@@ -121,6 +121,9 @@ table#t01 th, tr{
 <script>
 var timeSlots = document.querySelectorAll(".timeSlot");
 for(var i = 0; i < timeSlots.length; i++){
+	if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i].childNodes[1].innerHTML){
+		timeSlots[i].style.display = "none";
+	}
 	timeSlots[i].onclick = statusChangeFunction;
 }
 
@@ -220,9 +223,6 @@ for(i1 = 0; i1 < data.length; i1++){
 	if(data[i1].name == getParameterByName("roomName", document.location)){
 	for(var i2 = 0; i2 < data[i1].booking.length; i2++){
 		for(var i3 = 0; i3 < timeSlots.length; i3++){
-			if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i3].childNodes[1].innerHTML){
-				timeSlots[i3].style.display = "none";
-			}
 		// use HH with capital letters (24h vs 12h) and mm with small letters (00 vs 01)
 			if(moment(data[i1].booking[i2].from).format("HH:mm") == timeSlots[i3].childNodes[1].innerHTML){
 				var compareDate = moment().format();
