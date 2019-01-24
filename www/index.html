@@ -137,7 +137,7 @@ function statusChangeFunction(){
 			"headers": {
 				"Content-Type": "application/json"
 			},
-			"data": JSON.stringify({PIN: Number(document.getElementById("LoginCode").value),
+			"data": JSON.stringify({PIN: Number(localStorage.PIN),
 				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
 				room: getParameterByName("roomName",document.location)
 			}),
@@ -154,7 +154,7 @@ function statusChangeFunction(){
 				"Content-Type": "application/json"
 			},
 			"data": JSON.stringify({name: document.getElementById("Username").innerHTML,
-				pass: document.getElementById("LoginCode").value,
+				pass: localStorage.PIN,
 				room: getParameterByName("roomName",document.location),
 				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
 				to: moment(this.childNodes[1].innerHTML, "HH:mm").add(30, "minutes").toDate()
@@ -194,6 +194,7 @@ function loginFunction(){
 	$.ajax(settings).done( function(data){
 		if(data.authenticated == 1 || data.authenticated == 2){
 			localStorage.setItem("PIN", document.getElementById("LoginCode").value || localStorage.PIN);
+			console.log(localStorage.PIN);
 			localStorage.setItem("Username", data.user.displayName)
 			document.getElementById("Username").innerHTML = localStorage.Username;
 			document.getElementById("LoginButton").style.display = "none";
