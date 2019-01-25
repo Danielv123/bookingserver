@@ -13,3 +13,5 @@ obj/Debug/bookingserver\.njsprojAssemblyReference\.cache
 obj/Release/bookingserver\.njsproj\.CoreCompileInputs\.cache
 
 \.vs/
+
+debug\.log

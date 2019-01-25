@@ -31,7 +31,7 @@ app.use(function (req, res, next) {
     next()
 });
 app.use(function (req, res, next) {
-    console.log(`HIT ${req.originalUrl} with ${JSON.stringify(req.body)}`)
+    if(req.method == "POST") console.log(`HIT ${req.originalUrl} with ${JSON.stringify(req.body)}`)
     next()
 })
 app.listen(config.port || 3000)
