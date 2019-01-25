@@ -47,7 +47,7 @@
         {
             "PIN": 1234,
             "name": "Daniel",
-            "displayName": "Daniel Vest�l",
+            "displayName": "Daniel Vestøl",
             "admin": true
         },
         {
@@ -59,7 +59,7 @@
         {
             "PIN": 1990,
             "name": "Kjell",
-            "displayName": "Kjell Gr�nbeck"
+            "displayName": "Kjell Grønbeck"
         }
     ]
 }
