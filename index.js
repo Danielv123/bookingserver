@@ -6,11 +6,17 @@ const bodyParser = require("body-parser")
 var app = express()
 app.use(bodyParser.json())
 app.use(express.static('www'))
-// make sure all responses are sent as UTF-8 to support æ,ø and å
+// make sure all responses are sent as UTF-8 to support ï¿½,ï¿½ and ï¿½
 app.use(function (req, res, next) {
     res.setHeader('charset', 'utf-8')
     next()
 });
+
+// load config
+let config = {}
+try {
+    config = JSON.parse(fs.readFileSync("config.json"))
+} catch (e) { }
 
 let db = JSON.parse(fs.readFileSync("db.json"));
 
@@ -86,7 +92,8 @@ app.post("/api/booking", async (req, res) => {
     } else {
         res.send({
             ok: false,
-            msg: "Auth/verification failed"
+            msg: "Auth/verification failed",
+            data: [!!req.body, !!req.body.name, !!authenticated(req.body.pass), !!req.body.room, !!req.body.from, !!req.body.to, !!moment(req.body.from).isValid(), !!moment(req.body.to).isValid()]
         })
     }
 })
@@ -261,4 +268,4 @@ async function saveDatabase() {
 function getUserByName(name) {
     return db.users.find(user => user.name == name)
 }
-app.listen(3000)
+app.listen(config.port || 3000)
