@@ -3,20 +3,39 @@ var fs = require("fs-extra")
 const moment = require("moment")
 var express = require('express')
 const bodyParser = require("body-parser")
-var app = express()
-app.use(bodyParser.json())
-app.use(express.static('www'))
-// make sure all responses are sent as UTF-8 to support ï¿½,ï¿½ and ï¿½
-app.use(function (req, res, next) {
-    res.setHeader('charset', 'utf-8')
-    next()
-});
+var util = require('util');
 
 // load config
 let config = {}
 try {
     config = JSON.parse(fs.readFileSync("config.json"))
 } catch (e) { }
+
+// setup logging to file
+var log_file = fs.createWriteStream(`${__dirname}/debug.log`, { flags: 'a' })
+var log_stdout = process.stdout
+
+console.log = function (d) {
+    log_file.write(`${moment().format("DD-MM-YY HH:mm")} | ${util.format(d)} \n`);
+    log_stdout.write(`${moment().format("DD-MM-YY HH:mm")} | ${util.format(d)} \n`);
+};
+console.log("Server started")
+
+// setup webserver
+var app = express()
+app.use(bodyParser.json())
+app.use(express.static('www'))
+// make sure all responses are sent as UTF-8 to support æ,ø and å
+app.use(function (req, res, next) {
+    res.setHeader('charset', 'utf-8')
+    next()
+});
+app.use(function (req, res, next) {
+    console.log(`HIT ${req.originalUrl} with ${JSON.stringify(req.body)}`)
+    next()
+})
+app.listen(config.port || 3000)
+console.log(`Listening on port ${config.port || 3000}`)
 
 let db = JSON.parse(fs.readFileSync("db.json"));
 
@@ -71,25 +90,28 @@ app.post("/api/booking", async (req, res) => {
             if (!rom.booking.find(book => book.from == booking.from)) {
                 rom.booking.push(booking);
                 await saveDatabase();
+                console.log("Booked room"); console.log(booking)
                 res.send({
                     ok: true,
                     msg: "Booked room",
                     data: booking
                 });
             } else {
+                console.log("Room already booked for that period")
                 res.send({
                     ok: false,
                     msg: "Room already booked for that period"
                 })
             }
-            console.log("booked room")
         } else {
+            console.log("Did not find room")
             res.send({
                 ok: false,
                 msg: "Did not find room"
             })
         }
     } else {
+        console.log("Auth/verification failed")
         res.send({
             ok: false,
             msg: "Auth/verification failed",
@@ -109,7 +131,7 @@ app.post("/api/unbook", async (req, res) => {
             let didUnbook = false
             roomDb.booking = roomDb.booking.filter(book => {
                 if (book.from == req.body.from) {
-                    console.log("Removed booking "); console.log(book)
+                    console.log("Unbooked room"); console.log(book)
                     res.send({
                         ok: true,
                         msg: "Unbooked room"
@@ -121,17 +143,22 @@ app.post("/api/unbook", async (req, res) => {
                 }
             })
             await saveDatabase()
-            if (!didUnbook) res.send({
-                ok: false,
-                msg: "Didn't unbook, couldn't find reservation"
-            })
+            if (!didUnbook) {
+                console.log("Didn't unbook, couldn't find reservation")
+                res.send({
+                    ok: false,
+                    msg: "Didn't unbook, couldn't find reservation"
+                })
+            }
         } else {
+            console.log("Room not found")
             res.send({
                 ok: false,
                 msg: "Room not found"
             })
         }
     } else {
+        console.log("unauthenticated")
         res.send({
             ok: false,
             msg: "unauthenticated"
@@ -159,17 +186,20 @@ app.post("/api/addUser", async (req, res) => {
                 admin: req.body.newUser.admin,
             })
             await saveDatabase()
+            console.log("New user created")
             res.send({
                 ok: true,
                 msg: "New user created",
             })
         } else {
+            console.log("PIN unavailable. Please pick a different PIN.")
             res.send({
                 ok: false,
                 msg: "PIN unavailable. Please pick a different PIN."
             })
         }
     } else {
+        console.log("Input validation/auth failed")
         res.send({
             ok: false,
             msg: "Input validation/auth failed",
@@ -195,6 +225,7 @@ app.post("/api/removeUser", async (req, res) => {
         })
         await saveDatabase()
     } else {
+        console.log("Unauthenticated")
         res.send({
             ok: false,
             msg: "Unauthenticated"
@@ -253,6 +284,7 @@ function authenticated(PIN = "nope") {
     }
     let users = db.users.filter(user => user.PIN === PIN);
     if (users.length > 1) {
+        console.log(new Error("Yikes, there should never be duplicate PINs! (see PIN " + PIN + ")"))
         throw new Error("Yikes, there should never be duplicate PINs! (see PIN " + PIN + ")")
     } else if (users.length < 1) {
         return 0;
@@ -268,4 +300,15 @@ async function saveDatabase() {
 function getUserByName(name) {
     return db.users.find(user => user.name == name)
 }
-app.listen(config.port || 3000)
+async function deleteOldBookings() {
+    db.rooms.forEach(room => {
+        // filter out bookings that ended before the current time
+        room.booking = room.booking.filter(booking => {
+            if (moment(booking.to).isAfter(moment())) return true
+            console.log("Removed old booking:");console.log(booking)
+            return false
+        })
+    })
+    await saveDatabase();
+}
+setInterval(deleteOldBookings, 1000 * 60 * 5) // clear old bookings every 5 minutes
