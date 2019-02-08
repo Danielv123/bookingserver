@@ -5,6 +5,16 @@
 </script>
 <script language="JavaScript" type="text/javascript" src="jquery-3.3.1.min.js">
 </script>
+<script type="text/javascript" src="datetimepicker.js">
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+$(document).ready( function () {
+    $('#picker').dateTimePicker({ showTime: false, selectData: "now", dateFormat: 'DD/MM/YYYY', positionShift: { top: 20, left: -100}});
+})
+</script>
 <style>
 table#t01{
 	width: 100%;
@@ -25,20 +35,25 @@ table#t01 th, tr{
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta http-equiv="refresh" content="300";>
 </head>
+<a id="MainLink" href="/hovedside.html"></a>
 <body style="margin:0px;">
-
-
 
 <h1 id="RoomNameHeader" style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom <B></h1>
 
-
-<p id="Username"></p>
+<span id="Username"></span>
 <input type="text" name="LoginCode" id="LoginCode">
 <button onclick="loginFunction()" id="LoginButton">Login</button>
 <button onclick="document.location = document.location" id="RefreshButton">Refresh</button>
-<button onclick="logoutFunction()" id="LogoutButton">Logout</button>
+<button onclick="logoutFunction()" id="LogoutButton" style="visibility:hidden;">Logout</button>
 
-<div style="background-color:white;color:white;">.</div>
+<span style="width: 100px; margin: 0px;">
+    <span id="picker"></span>
+    <input type="visible" id="result" value="" onChange="timeChanged(this)" />
+</span>
+
+<button onclick="timeChanged()" id="TimeChanged">Time</button>
+
+<div style="visibility:hidden;">.</div>
 <table id="t01">
 	<tr>
 		<th style="background-color: gray;">Tid</th>
@@ -120,12 +135,38 @@ table#t01 th, tr{
 
 <script>
 var timeSlots = document.querySelectorAll(".timeSlot");
-for(var i = 0; i < timeSlots.length; i++){
-	if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i].childNodes[1].innerHTML){
-		timeSlots[i].style.display = "none";
+
+
+function removePassedTimeTables(){
+	for(var i = 0; i < timeSlots.length; i++){
+		if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i].childNodes[1].innerHTML){
+			timeSlots[i].style.display = "none";
+		}
+		timeSlots[i].onclick = statusChangeFunction;
 	}
-	timeSlots[i].onclick = statusChangeFunction;
 }
+
+function addRemovedTimeTables(){
+	for(var i = 0; i < timeSlots.length; i++){
+		if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i].childNodes[1].innerHTML){
+			timeSlots[i].style.display = "block";
+		}
+		timeSlots[i].onclick = statusChangeFunction;
+	}
+}
+
+function timeChanged(){
+	if(moment(document.getElementById("result").value).format("MM:DD:YY") == moment().format("DD:MM:YY")){
+		console.log("Hi");
+		removePassedTimeTables();
+	}else if(moment(document.getElementById("result").value).format("MM:DD:YY") !== moment().format("DD:MM:YY")){
+		console.log(moment().format("DD:MM:YY"));
+		console.log(moment(document.getElementById("result").value).format("MM:DD:YY"));
+		addRemovedTimeTables();
+	}
+}
+
+removePassedTimeTables();
 
 function statusChangeFunction(){
 	if (!document.getElementById("Username").innerHTML == ""){
@@ -182,6 +223,9 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 document.getElementById("RoomNameHeader").innerHTML = "Booking for rom " + getParameterByName("roomName", document.location);
+if(getParameterByName("mainLink") == "true"){
+	document.getElementById("MainLink").innerHTML = "Hovedside";
+}
 function loginFunction(){
 	var settings = {
 	"url": "/api/auth",
@@ -199,8 +243,13 @@ function loginFunction(){
 			localStorage.setItem("PIN", document.getElementById("LoginCode").value || localStorage.PIN);
 			localStorage.setItem("Username", data.user.displayName)
 			document.getElementById("Username").innerHTML = localStorage.Username;
-			document.getElementById("LoginButton").style.display = "none";
+			document.getElementById("LoginButton").style.visibility = "hidden";
 			document.getElementById("LoginCode").style.display = "none";
+			document.getElementById("LogoutButton").style.visibility = "visible";
+		}
+		else if (!document.getElementById("LoginCode").value == ""){
+			document.getElementById("LoginCode").style.backgroundColor = "#ff4956";
+			alert("Wrong PIN");
 		}
 	});
 }
@@ -208,10 +257,12 @@ loginFunction();
 function logoutFunction(){
 	delete localStorage.PIN
 	delete localStorage.Username
-	document.getElementById("LoginButton").style.display = "";
+	document.getElementById("LoginButton").style.visibility = "visible";
+	document.getElementById("LoginCode").style.backgroundColor = ""
 	document.getElementById("LoginCode").style.display = "";
 	document.getElementById("Username").innerHTML = "";
 	document.getElementById("LoginCode").value = "";
+	document.getElementById("LogoutButton").style.visibility = "hidden";
 }
 var settings = {
 	"url": "/api/rooms",
