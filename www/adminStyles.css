@@ -1,0 +1,36 @@
+* {
+    margin: 0px;
+}
+
+table#t01 {
+    width: 100%;
+    color: white;
+    border: 1px solid gray;
+    border-collapse: collapse;
+}
+
+    table#t01 th, tr {
+        padding: 7px;
+        width: 50%;
+        text-align: middle;
+        background-color: green;
+    }
+
+h2 {
+    color: white;
+    text-align: center;
+    background-color: gray;
+    padding: 20px;
+}
+
+li {
+    list-style: none;
+}
+
+ul {
+    padding-inline-start: 0px;
+}
+
+.userIsAdmin {
+    margin: 0px 15px 0px 10px;
+}

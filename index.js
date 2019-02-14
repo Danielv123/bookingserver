@@ -71,7 +71,7 @@ app.post("/api/auth", (req, res) => {
 app.post("/api/booking", async (req, res) => {
     // validate input (otherwise reject request)
     if (req.body && req.body.name
-        && authenticated(req.body.pass)
+        && authenticated(req.body.PIN)
         && req.body.room
         && req.body.from
         && req.body.to
@@ -115,7 +115,7 @@ app.post("/api/booking", async (req, res) => {
         res.send({
             ok: false,
             msg: "Auth/verification failed",
-            data: [!!req.body, !!req.body.name, !!authenticated(req.body.pass), !!req.body.room, !!req.body.from, !!req.body.to, !!moment(req.body.from).isValid(), !!moment(req.body.to).isValid()]
+            data: [!!req.body, !!req.body.name, !!authenticated(req.body.PIN), !!req.body.room, !!req.body.from, !!req.body.to, !!moment(req.body.from).isValid(), !!moment(req.body.to).isValid()]
         })
     }
 })
@@ -240,11 +240,15 @@ app.post("/api/editUser", (req, res) => {
         req.body.newDisplayName &&
         typeof req.body.newDisplayName == "string" &&
         typeof req.body.newPin == "string" &&
+        typeof req.body.admin == "boolean" &&
         authenticated(req.body.PIN) == 2) {
 
         // change name
         getUserByName(req.body.name).displayName = req.body.newDisplayName
 
+        // change admin status
+        getUserByName(req.body.name).admin = req.body.admin
+        
         // change PIN if asked for
         let pinMsg = "";
         if (req.body.newPin && !isNaN(Number(req.body.newPin))){
@@ -257,6 +261,8 @@ app.post("/api/editUser", (req, res) => {
                 pinMsg = "new PIN was not unique, not changing anything"
             }
         }
+
+
         res.send({
             ok: true,
             msg: "name updated, "+pinMsg

@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Booking admin page</title>
+    <link rel="stylesheet" type="text/css" href="adminStyles.css">
     <script language="JavaScript" type="text/javascript" src="jquery-3.3.1.min.js"></script>
 </head>
 <body>
@@ -20,22 +21,53 @@
                 var user = users[i];
                 userList.innerHTML += '<li><p id="name" style="display:none;">' + user.name + '</p><input class="displayName" style="width:300px;display: inline-block;" value="' + user.displayName + '"></input>' +
                     '<input style = "width:100px;" placeholder = "new PIN" ></input >' +
-                    '<span>Admin: </span><input id="userIsAdmin" type="checkbox"></input>' +
-                    '<input class="updateInformation" type="button" value="Update information"></input></li>'
+                    '<span>Admin: </span><input class="userIsAdmin" type="checkbox"></input>' +
+                    '<input class="updateInformation" type="button" value="Update information"></input>' +
+                    '<input class="deleteUser" type="button" value="Delete user"></input></li>'
+            }
+            var adminCheckboxes = document.querySelectorAll(".userIsAdmin")
+            for (var i = 0; i < users.length; i++) {
+                var user = users[i];
+                if(user.admin) adminCheckboxes[i].checked = true
             }
             var updateInformationButtons = document.querySelectorAll(".updateInformation")
+            var deleteUserButtons = document.querySelectorAll(".deleteUser")
             for (var o = 0; o < updateInformationButtons.length; o++) {
-                var button = updateInformationButtons[o];
-                button.onclick = function (e) {
+                updateInformationButtons[o].onclick = function (e) {
                     var button = e.srcElement;
                     var data = {
                         PIN: Number(localStorage.PIN),
                         name: button.parentElement.children[0].innerHTML,
                         newDisplayName: button.parentElement.children[1].value,
                         newPin: button.parentElement.children[2].value,
+                        admin: button.parentElement.children[4].checked,
                     };
                     var settings = {
                         "url": "/api/editUser",
+                        "method": "POST",
+                        "timeout": 0,
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        "data": JSON.stringify(data),
+                    };
+                    $.ajax(settings).done(function (resp) {
+                        if (resp.ok) {
+                            alert(resp.msg)
+                            document.location = document.location
+                        } else {
+                            alert(resp.msg)
+                        }
+                    });
+                }
+                deleteUserButtons[o].onclick = function (e) {
+                    var button = e.srcElement;
+                    var data = {
+                        PIN: Number(localStorage.PIN),
+                        name: button.parentElement.children[0].innerHTML
+                    }
+                    var settings = {
+                        "url": "/api/removeUser",
                         "method": "POST",
                         "timeout": 0,
                         "headers": {

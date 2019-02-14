@@ -198,7 +198,7 @@ function statusChangeFunction(){
 				"Content-Type": "application/json"
 			},
 			"data": JSON.stringify({name: document.getElementById("Username").innerHTML,
-				pass: localStorage.PIN,
+				PIN: localStorage.PIN,
 				room: getParameterByName("roomName",document.location),
 				from: moment(this.childNodes[1].innerHTML, "HH:mm").toDate(),
 				to: moment(this.childNodes[1].innerHTML, "HH:mm").add(30, "minutes").toDate()
