@@ -1,28 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script language="JavaScript" type="text/javascript" src="moment.min.js">
-</script>
-<script language="JavaScript" type="text/javascript" src="jquery-3.3.1.min.js">
-</script>
-<title>Åssiden Booking System</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<script language="JavaScript" type="text/javascript" src="moment.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="booking.js"></script>
+	<title>Åssiden Booking System</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
 <body style="margin:0px;">
-
-<h1 style="color:white;text-align:center;background-color:crimson;padding:20px;"><B>Åssiden Booking Hovedside<B></h1>
-
-<a href="/?roomName=Anode&mainLink=true" style="position:Fixed;left:200px;top:300px;">Anode</a>
-<a href="/?roomName=Katode&mainLink=true">Katode</a>
-<a href="/?roomName=RAM&mainLink=true">RAM</a>
-<a href="/?roomName=Coloumb&mainLink=true">Coloumb</a>
-<a href="/?roomName=AC&mainLink=true">AC</a>
-<a href="/?roomName=DC&mainLink=true">DC</a>
-<a href="/?roomName=Rho&mainLink=true">Rho</a>
-
-<script>
-</script>
+	
+	<h1 style="color:white;text-align:center;background-color:crimson;padding:20px;"><B>Åssiden Booking Hovedside</B></h1>
+	
+	<div id="mapContainer">
+		<img class="map main" src="/schoolMap.png">
+		<img class="map image Anode" src="/Anode.png">
+		<img class="map image Katode" src="/Katode.png">
+		<img class="map image RAM" src="/RAM.png">
+		<img class="map image Coloumb" src="/Coloumb.png">
+		<img class="map image AC" src="/AC.png">
+		<img class="map image DC" src="/DC.png">
+		<img class="map image Rho" src="/Rho.png">
+		<a class="map Anode" href="/?roomName=Anode&mainLink=true">Anode</a>
+		<a class="map Katode" href="/?roomName=Katode&mainLink=true">Katode</a>
+		<a class="map RAM" href="/?roomName=RAM&mainLink=true">RAM</a>
+		<a class="map Coloumb" href="/?roomName=Coloumb&mainLink=true">Coloumb</a>
+		<a class="map AC" href="/?roomName=AC&mainLink=true">AC</a>
+		<a class="map DC" href="/?roomName=DC&mainLink=true">DC</a>
+		<a class="map Rho" href="/?roomName=Rho&mainLink=true">Rho</a>
+	</div>
+	<style>
+		#mapContainer {
+			position:relative;
+		}
+		.map {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+		}
+		.map.image {
+			filter: hue-rotate(130deg) brightness(100%)opacity(100%);
+		}
+		a.map {
+			color:white;
+			text-decoration: solid;
+		}
+		a.map.Anode {
+			top:415px;
+			left:260px;
+		}
+		a.map.Katode {
+			top:410px;
+			left:335px;
+		}
+		a.map.AC {
+			top:215px;
+			left:485px;
+		}
+		a.map.DC {
+			top:130px;
+			left:500px;
+		}
+		a.map.Rho {
+			top:520px;
+			left:430px;
+		}
+		a.map.RAM {
+			top: 155px;
+			left: 845px;
+		}
+		a.map.Coloumb {
+			top:410px;
+			left:500px;
+		}
+	</style>
+	<script>
+		getJSON("/api/rooms", function(err, rooms){
+			console.log(rooms)
+			for(var i = 0; i < rooms.length; i++){
+				var occupiedNess = rooms[i].booking.length;
+				<!-- for(var o = 0; o < rooms[i].booking.length; o++){ -->
+					<!-- occupiedNess += 1; -->
+				<!-- } -->
+				console.log(rooms[i].name+" occupiedNess:"+occupiedNess)
+				if(occupiedNess){ // make the room red/yellow
+					document.querySelector(".map.image."+rooms[i].name).style.filter = "hue-rotate(0deg) brightness(100%) opacity(100%)";
+				} else { // make room green
+					document.querySelector(".map.image."+rooms[i].name).style.filter = "hue-rotate(130deg) brightness(100%) opacity(80%)";
+				}
+			}
+		});
+	</script>
 </body>
-
 </html>

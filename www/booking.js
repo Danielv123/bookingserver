@@ -23,50 +23,40 @@ function getBookingInfo(){
     console.log(await postJSON("/api/booking", getBookingInfo()));
 })();
 function getJSON(url, callback) {
-    return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'json';
-        xhr.onload = function () {
-            var status = xhr.status;
-            if (status == 200) {
-                if (callback) callback(null, xhr.response);
-                resolve(xhr.response);
-            } else {
-                if (callback) callback(status);
-                reject(status);
-            }
-        };
-        // triggers if connection is refused
-        xhr.onerror = function (e) {
-            if (callback) callback(e);
-            reject(e);
-        };
-        xhr.send();
-    });
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', url, true);
+	xhr.responseType = 'json';
+	xhr.onload = function () {
+		var status = xhr.status;
+		if (status == 200) {
+			if (callback) callback(null, xhr.response);
+		} else {
+			if (callback) callback(status);
+		}
+	};
+	// triggers if connection is refused
+	xhr.onerror = function (e) {
+		if (callback) callback(e);
+	};
+	xhr.send();
 };
 // callback(err, json)
 function postJSON(url, data, callback) {
-    return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        xhr.responseType = 'json';
-        xhr.onload = function () {
-            var status = xhr.status;
-            if (status == 200) {
-                if (callback) callback(null, xhr.response);
-                resolve(xhr.response);
-            } else {
-                if (callback) callback(status);
-                reject(status);
-            }
-        };
-        // triggers if connection is refused
-        xhr.onerror = function (e) {
-            if (callback) callback(e);
-            reject(e);
-        };
-        xhr.send(JSON.stringify(data));
-    });
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', url, true);
+	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+	xhr.responseType = 'json';
+	xhr.onload = function () {
+		var status = xhr.status;
+		if (status == 200) {
+			if (callback) callback(null, xhr.response);
+		} else {
+			if (callback) callback(status);
+		}
+	};
+	// triggers if connection is refused
+	xhr.onerror = function (e) {
+		if (callback) callback(e);
+	};
+	xhr.send(JSON.stringify(data));
 };
