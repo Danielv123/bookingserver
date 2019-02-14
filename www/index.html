@@ -301,6 +301,8 @@ for(i1 = 0; i1 < data.length; i1++){
 }
 });
 
+// Send us to the map page if we haven't specified a roomName
+if(getParameterByName("roomName", document.location.href) == null) document.location = document.location.origin+"/hovedside.html"
 </script>
 </body>
 
