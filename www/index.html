@@ -41,17 +41,15 @@ table#t01 th, tr{
 <h1 id="RoomNameHeader" style="color:white;text-align:center;background-color:gray;padding:20px;"><B>Booking for rom <B></h1>
 
 <span id="Username"></span>
-<input type="text" name="LoginCode" id="LoginCode">
+<input type="text" name="LoginCode" id="LoginCode" autocomplete="off">
 <button onclick="loginFunction()" id="LoginButton">Login</button>
 <button onclick="document.location = document.location" id="RefreshButton">Refresh</button>
 <button onclick="logoutFunction()" id="LogoutButton" style="visibility:hidden;">Logout</button>
 
 <span style="width: 100px; margin: 0px;">
     <span id="picker"></span>
-    <input type="visible" id="result" value="" onChange="timeChanged(this)" />
+    <input type="hidden" id="result" value="" />
 </span>
-
-<button onclick="timeChanged()" id="TimeChanged">Time</button>
 
 <div style="visibility:hidden;">.</div>
 <table id="t01">
@@ -136,9 +134,17 @@ table#t01 th, tr{
 <script>
 var timeSlots = document.querySelectorAll(".timeSlot");
 
+var loginInput = document.getElementById("LoginCode");
+
+loginInput.addEventListener("keyup", function(event) {
+	if(event.keyCode == 13) {
+		document.getElementById("LoginButton").click();
+	}
+});
 
 function removePassedTimeTables(){
 	for(var i = 0; i < timeSlots.length; i++){
+		console.log();
 		if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i].childNodes[1].innerHTML){
 			timeSlots[i].style.display = "none";
 		}
@@ -149,19 +155,19 @@ function removePassedTimeTables(){
 function addRemovedTimeTables(){
 	for(var i = 0; i < timeSlots.length; i++){
 		if(moment().subtract(30, "minutes").format("HH:mm") >= timeSlots[i].childNodes[1].innerHTML){
-			timeSlots[i].style.display = "block";
+			timeSlots[i].style.display = "";
 		}
 		timeSlots[i].onclick = statusChangeFunction;
 	}
 }
 
 function timeChanged(){
-	if(moment(document.getElementById("result").value).format("MM:DD:YY") == moment().format("DD:MM:YY")){
+	if(moment(document.getElementById("result").value, "DD/MM/YYYY").format("DD:MM:YY") == moment().format("DD:MM:YY")){
 		console.log("Hi");
 		removePassedTimeTables();
-	}else if(moment(document.getElementById("result").value).format("MM:DD:YY") !== moment().format("DD:MM:YY")){
+	}else if(moment(document.getElementById("result").value, "DD/MM/YYYY").format("DD:MM:YY") !== moment().format("DD:MM:YY")){
 		console.log(moment().format("DD:MM:YY"));
-		console.log(moment(document.getElementById("result").value).format("MM:DD:YY"));
+		console.log(moment(document.getElementById("result").value, "DD/MM/YYYY").format("DD:MM:YY"));
 		addRemovedTimeTables();
 	}
 }
@@ -294,6 +300,7 @@ for(i1 = 0; i1 < data.length; i1++){
 	}
 }
 });
+
 </script>
 </body>
 

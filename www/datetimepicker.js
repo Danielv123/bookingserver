@@ -343,6 +343,7 @@
                         $content.remove();
                         $win.remove();
                     }
+					timeChanged();
                 }
 
                 function updateMainElem() {
