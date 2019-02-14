@@ -44,37 +44,39 @@
 		a.map {
 			color:white;
 			text-decoration: solid;
+			padding:30px;
 		}
 		a.map.Anode {
-			top:415px;
-			left:260px;
+			top:385px;
+			left:230px;
 		}
 		a.map.Katode {
-			top:410px;
-			left:335px;
+			top: 385px;
+			left:305px;
 		}
 		a.map.AC {
-			top:215px;
-			left:485px;
+			top:185px;
+			left:455px;
 		}
 		a.map.DC {
-			top:130px;
-			left:500px;
+			top:100px;
+			left:470px;
 		}
 		a.map.Rho {
-			top:520px;
-			left:430px;
+			top:490px;
+			left:400px;
 		}
 		a.map.RAM {
-			top: 155px;
-			left: 845px;
+			top: 125px;
+			left: 815px;
 		}
 		a.map.Coloumb {
-			top:410px;
-			left:500px;
+			top:380px;
+			left:470px;
 		}
 	</style>
 	<script>
+		// color rooms after how occupied they are
 		getJSON("/api/rooms", function(err, rooms){
 			console.log(rooms)
 			for(var i = 0; i < rooms.length; i++){
