@@ -45,21 +45,10 @@
     ],
     "users": [
         {
-            "PIN": 1234,
+            "PIN": "adminadmin",
             "name": "Daniel",
             "displayName": "Daniel Vestøl",
             "admin": true
-        },
-        {
-            "PIN": 123,
-            "name": "Anders",
-            "displayName": "Anders_g",
-            "admin": true
-        },
-        {
-            "PIN": 1990,
-            "name": "Kjell",
-            "displayName": "Kjell Grønbeck"
         }
     ]
 }

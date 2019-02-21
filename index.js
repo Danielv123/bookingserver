@@ -180,7 +180,7 @@ app.post("/api/addUser", async (req, res) => {
         && req.body.newUser.displayName) {
         if (isPinUnique(req.body.newUser.PIN)) {
             db.users.push({
-                PIN: Number(req.body.newUser.PIN),
+                PIN: req.body.newUser.PIN.toString(),
                 name: req.body.newUser.name,
                 displayName: req.body.newUser.displayName,
                 admin: req.body.newUser.admin,
@@ -251,11 +251,11 @@ app.post("/api/editUser", (req, res) => {
         
         // change PIN if asked for
         let pinMsg = "";
-        if (req.body.newPin && !isNaN(Number(req.body.newPin))){
+        if (req.body.newPin && req.body.newPin){
             if (isPinUnique(req.body.newPin)) {
                 pinMsg = "new PIN was unique, perform changes"
                 console.log("User before change: "+JSON.stringify(getUserByName(req.body.name)))
-                getUserByName(req.body.name).PIN = Number(req.body.newPin)
+                getUserByName(req.body.name).PIN = req.body.newPin.toString()
                 console.log("User after change:  " + JSON.stringify(getUserByName(req.body.name)))
             } else {
                 pinMsg = "new PIN was not unique, not changing anything"
@@ -275,18 +275,18 @@ app.post("/api/editUser", (req, res) => {
     }
 })
 function isPinUnique(PIN) {
-    if (!PIN || isNaN(Number(PIN))) {
+    if (!PIN || PIN.length < 3) {
         throw new Error("We aren't we getting a PIN?" + PIN)
     } else {
-        return !db.users.filter(user => user.PIN === Number(PIN)).length
+        return !db.users.filter(user => user.PIN === PIN).length
     }
 }
 function authenticated(PIN = "nope") {
-    PIN = Number(PIN)
-    if (isNaN(Number(PIN))) {
+    PIN = PIN.toString()
+    if (PIN.length < 3) {
         return 0;
     } else {
-        var PIN = Number(PIN)
+        var PIN = PIN
     }
     let users = db.users.filter(user => user.PIN === PIN);
     if (users.length > 1) {
