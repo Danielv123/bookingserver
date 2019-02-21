@@ -281,23 +281,27 @@ function isPinUnique(PIN) {
         return !db.users.filter(user => user.PIN === PIN).length
     }
 }
-function authenticated(PIN = "nope") {
-    PIN = PIN.toString()
-    if (PIN.length < 3) {
-        return 0;
+function authenticated(PIN) {
+    if (PIN && PIN.toString()) {
+        PIN = PIN.toString()
+        if (PIN.length < 3) {
+            return 0;
+        } else {
+            var PIN = PIN
+        }
+        let users = db.users.filter(user => user.PIN === PIN);
+        if (users.length > 1) {
+            console.log(new Error("Yikes, there should never be duplicate PINs! (see PIN " + PIN + ")"))
+            throw new Error("Yikes, there should never be duplicate PINs! (see PIN " + PIN + ")")
+        } else if (users.length < 1) {
+            return 0;
+        } else if (users[0].admin) {
+            return 2;
+        } else {
+            return 1;
+        }
     } else {
-        var PIN = PIN
-    }
-    let users = db.users.filter(user => user.PIN === PIN);
-    if (users.length > 1) {
-        console.log(new Error("Yikes, there should never be duplicate PINs! (see PIN " + PIN + ")"))
-        throw new Error("Yikes, there should never be duplicate PINs! (see PIN " + PIN + ")")
-    } else if (users.length < 1) {
         return 0;
-    } else if (users[0].admin) {
-        return 2;
-    } else {
-        return 1;
     }
 }
 async function saveDatabase() {
