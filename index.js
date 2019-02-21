@@ -75,11 +75,11 @@ app.post("/api/booking", async (req, res) => {
         && req.body.room
         && req.body.from
         && req.body.to
-        && moment(req.body.from).isValid() && moment(req.body.to).isValid()) {
+        && moment(req.body.from, "DD/MM/YYYY HH:mm").isValid() && moment(req.body.to, "DD/MM/YYYY HH:mm").isValid()) {
         // try adding reservation
         let rom = db.rooms.filter(x => x.name == req.body.room)[0];
         if (rom) {
-            let displayTime = moment(req.body.from).format('DD/MM, hh:mm')
+            let displayTime = moment(req.body.from, "DD/MM/YYYY HH:mm").format('DD/MM, hh:mm')
             let booking = {
                 name: req.body.name,
                 from: req.body.from,
@@ -115,7 +115,7 @@ app.post("/api/booking", async (req, res) => {
         res.send({
             ok: false,
             msg: "Auth/verification failed",
-            data: [!!req.body, !!req.body.name, !!authenticated(req.body.PIN), !!req.body.room, !!req.body.from, !!req.body.to, !!moment(req.body.from).isValid(), !!moment(req.body.to).isValid()]
+            data: [!!req.body, !!req.body.name, !!authenticated(req.body.PIN), !!req.body.room, !!req.body.from, !!req.body.to, !!moment(req.body.from, "DD/MM/YYYY HH:mm").isValid(), !!moment(req.body.to, "DD/MM/YYYY HH:mm").isValid()]
         })
     }
 })
