@@ -48,7 +48,7 @@ table#t01 th, tr{
 
 <span style="width: 100px; margin: 0px;">
     <span id="picker"></span>
-    <input type="visible" id="result" value="" />
+    <input type="hidden" id="result" value="" />
 </span>
 
 <div style="visibility:hidden;">.</div>
@@ -165,8 +165,12 @@ function addRemovedTimeTables(){
 function timeChanged(){
 	if(moment(document.getElementById("result").value, "DD/MM/YYYY").format("DD:MM:YY") == moment().format("DD:MM:YY")){
 		removePassedTimeTables();
+		removeBookedRooms();
+		setBookedRooms();
 	}else if(moment(document.getElementById("result").value, "DD/MM/YYYY").format("DD:MM:YY") !== moment().format("DD:MM:YY")){
 		addRemovedTimeTables();
+		removeBookedRooms();
+		setBookedRooms();
 	}
 }
 
@@ -273,31 +277,50 @@ var settings = {
 	"method": "GET",
 	"timeout": 0,
 };
-$.get( "/api/rooms", function(data) {
-for(i1 = 0; i1 < data.length; i1++){
-	if(data[i1].name == getParameterByName("roomName", document.location)){
-	for(var i2 = 0; i2 < data[i1].booking.length; i2++){
-		for(var i3 = 0; i3 < timeSlots.length; i3++){
-		// use HH with capital letters (24h vs 12h) and mm with small letters (00 vs 01)
-			if(moment(data[i1].booking[i2].from).format("DD/MM/YYYY HH:mm") == moment(document.getElementById("result").value, "DD/MM/YYYY").format("DD/MM/YYYY") + " " + timeSlots[i3].childNodes[1].innerHTML){
-				var compareDate = moment().format();
-				var startDate = moment(data[i1].booking[i2].from).format();
-				var endDate = moment(data[i1].booking[i2].to).format();
-				if(compareDate <= endDate && compareDate >= startDate){
-					timeSlots[i3].childNodes[1].style.backgroundColor = "Crimson";
-					timeSlots[i3].childNodes[3].style.backgroundColor = "Crimson";
-					timeSlots[i3].childNodes[3].innerHTML = "Opptatt";
-				}else{
-					timeSlots[i3].childNodes[1].style.backgroundColor = "#eeee17";
-					timeSlots[i3].childNodes[3].style.backgroundColor = "#eeee17";
-					timeSlots[i3].childNodes[3].innerHTML = "Booket av " + data[i1].booking[i2].name;
+
+setBookedRooms();
+
+function setBookedRooms(){
+	$.get( "/api/rooms", function(data) {
+	for(i1 = 0; i1 < data.length; i1++){
+		if(data[i1].name == getParameterByName("roomName", document.location)){
+		for(var i2 = 0; i2 < data[i1].booking.length; i2++){
+			for(var i3 = 0; i3 < timeSlots.length; i3++){
+			// use HH with capital letters (24h vs 12h) and mm with small letters (00 vs 01)
+				if(moment(data[i1].booking[i2].from).format("DD/MM/YYYY HH:mm") == moment(document.getElementById("result").value, "DD/MM/YYYY").format("DD/MM/YYYY") + " " + timeSlots[i3].childNodes[1].innerHTML){
+					var compareDate = moment().format();
+					var startDate = moment(data[i1].booking[i2].from).format();
+					var endDate = moment(data[i1].booking[i2].to).format();
+					if(compareDate <= endDate && compareDate >= startDate){
+						timeSlots[i3].childNodes[1].style.backgroundColor = "Crimson";
+						timeSlots[i3].childNodes[3].style.backgroundColor = "Crimson";
+						timeSlots[i3].childNodes[3].innerHTML = "Opptatt";
+					}else{
+						timeSlots[i3].childNodes[1].style.backgroundColor = "#eeee17";
+						timeSlots[i3].childNodes[3].style.backgroundColor = "#eeee17";
+						timeSlots[i3].childNodes[3].innerHTML = "Booket av " + data[i1].booking[i2].name;
+					}
 				}
+
 			}
 		}
+		}
 	}
+	});
+}
+
+if(1 !== 2){
+	console.log("kk")
+}
+
+function removeBookedRooms(){
+	for(var i = 0; i < timeSlots.length; i++){
+		timeSlots[i].childNodes[1].style.backgroundColor = "Green";
+		timeSlots[i].childNodes[3].style.backgroundColor = "Green";
+		timeSlots[i].childNodes[3].innerHTML = "Ledig";
+		console.log("ok");
 	}
 }
-});
 
 // Send us to the map page if we haven't specified a roomName
 if(getParameterByName("roomName", document.location.href) == null) document.location = document.location.origin+"/hovedside.html"
