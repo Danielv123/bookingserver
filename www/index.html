@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <script language="JavaScript" type="text/javascript" src="moment.min.js">
@@ -208,8 +208,8 @@ function statusChangeFunction(){
 			"data": JSON.stringify({name: document.getElementById("Username").innerHTML,
 				PIN: localStorage.PIN,
 				room: getParameterByName("roomName",document.location),
-				from: moment(document.getElementById("result").value + " " + this.childNodes[1].innerHTML, "DD/MM/YYYY HH:mm").format(),
-				to: moment(document.getElementById("result").value + " " + this.childNodes[1].innerHTML, "DD/MM/YYYY HH:mm").add(30, "minutes").format()
+                from: moment(document.getElementById("result").value + " " + this.childNodes[1].innerHTML, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY HH:mm"),
+                to: moment(document.getElementById("result").value + " " + this.childNodes[1].innerHTML, "DD/MM/YYYY HH:mm").add(30, "minutes").format("DD/MM/YYYY HH:mm")
 			}),
 			};
 			$.ajax(settings).done(function (response) {
