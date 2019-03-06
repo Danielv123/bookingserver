@@ -314,7 +314,7 @@ async function deleteOldBookings() {
     db.rooms.forEach(room => {
         // filter out bookings that ended before the current time
         room.booking = room.booking.filter(booking => {
-            if (moment(booking.to).isAfter(moment())) return true
+            if (moment(booking.to, "DD/MM/YYYY HH:mm").isAfter(moment())) return true
             console.log("Removed old booking:");console.log(booking)
             return false
         })
