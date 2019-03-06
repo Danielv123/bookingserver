@@ -124,7 +124,7 @@ app.post("/api/unbook", async (req, res) => {
         req.body.room &&
         typeof req.body.room == "string" &&
         req.body.from &&
-        moment(req.body.from).isValid() &&
+        moment(req.body.from, "DD/MM/YYYY HH:mm").isValid() &&
         authenticated(req.body.PIN)) {
 		let roomDb = db.rooms.find(r => r.name == req.body.room)
         if (roomDb) {
