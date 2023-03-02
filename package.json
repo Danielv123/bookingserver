@@ -15,6 +15,6 @@
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "newman": "^4.3.1"
+    "newman": "^5.3.2"
   }
 }
